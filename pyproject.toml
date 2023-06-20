@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "turkish-validator"
-version = "0.1.0"
+version = "0.1.2"
 description = ""
 authors = ["Hasan Özdemir <hasanozdemir1@trakya.edu.tr>"]
 readme = "README.md"
@@ -8,8 +8,10 @@ packages = [{include = "turkish_validator"}]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-pytest = "^7.2.1"
 black = "^23.1.0"
+
+[tool.poetry.group.test.dependencies]
+pytest = "^7.2.1"
 
 
 [build-system]
