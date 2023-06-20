@@ -1,9 +1,5 @@
-import src.turkish_validator as tv
-# invalid input
-def test_turkish_id_invalid():
-    assert True == True
+from turkish_validator.tr_validator import is_valid_turkish_id
 
+def test_is_valid_turkish_id():
+    assert is_valid_turkish_id('123') == False
 
-# valid input
-def test_turkish_id_valid():
-    assert True == True

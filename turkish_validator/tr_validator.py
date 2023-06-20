@@ -8,7 +8,7 @@ Developed within the framework of PEP8 and type annotations rules
 # FUNCTIONS
 
 
-def check_turkish_id(turkish_id: str) -> bool:
+def is_valid_turkish_id(turkish_id: str) -> bool:
     """
     Turkish Identification Number is a unique personal identification number that is assigned to every citizen of Turkey.
     This function return your Turkish ID number validity status
@@ -59,7 +59,7 @@ def check_turkish_id(turkish_id: str) -> bool:
         print("Please enter digits")
 
 
-def check_turkish_tax_no(turkish_tax_no: str) -> bool:
+def is_valid_turkish_tax_no(turkish_tax_no: str) -> bool:
     """
     Turkish tax identification number is the number used when paying taxes. Everyone with income has to pay tax through this number.
     The tax identification number is the number used to check the person's tax transactions.
