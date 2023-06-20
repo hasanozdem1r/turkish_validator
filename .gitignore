@@ -2,3 +2,4 @@
 /dist/
 /build/
 /turkish_validator.egg-info/
+/.pytest_cache/
