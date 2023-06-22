@@ -58,6 +58,10 @@ jobs:
         name: Run pre-commit
         uses: pre-commit/action@v3.0.0
 
+      - id: set_poetry_token
+        name: Set PyPI API token for Poetry
+        run: poetry config pypi-token.pypi ${{ secrets.POETRY_PYPI_TOKEN }}
+
       - id: build_package
         name: Build package
         run: poetry build
@@ -65,5 +69,3 @@ jobs:
       - id: publish_package
         name: Publish package
         run: poetry publish
-        env:
-          POETRY_PYPI_TOKEN: ${{ secrets.POETRY_PYPI_TOKEN }}
