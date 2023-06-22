@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "turkish-validator"
-version = "0.1.2"
+version = "0.1.3"
 description = "A package for validating Turkish ID and tax numbers."
 authors = ["Hasan Özdemir <hasanozdemir1@trakya.edu.tr>"]
 readme = "README.md"
@@ -19,57 +19,3 @@ pytest = "^7.2.1"
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
-
-[tool.black]
-line-length = 88
-include = '\.pyi?$'
-exclude = '''
-/(
-    \.eggs/  # exclude a directory named "eggs"
-    | \.git/  # exclude a directory named "git"
-    | \.hg/  # exclude a directory named "hg"
-    | \.mypy_cache/  # exclude a directory named "mypy_cache"
-    | \.tox/  # exclude a directory named "tox"
-    | \.venv/  # exclude a directory named "venv"
-    | _build/  # exclude a directory named "_build"
-    | buck-out/  # exclude a directory named "buck-out"
-    | build/  # exclude a directory named "build"
-    | dist/  # exclude a directory named "dist"
-    | node_modules/  # exclude a directory named "node_modules"
-    | output/  # exclude a directory named "output"
-    | scripts/  # exclude a directory named "scripts"
-    | target/  # exclude a directory named "target"
-    | venv/  # exclude a directory named "venv"
-    | webpack-assets.json
-)/
-'''
-
-[tool.black.exclude]
-paths = '''
-# Exclude generated files
-**/generated/**
-# Exclude bundled dependencies
-**/vendor/**
-# Exclude poetry-generated files
-**/pyproject.toml
-'''
-
-[tool.black]
-line-length = 88
-include = '\.pyi?$'
-exclude = '''
-/(
-    \.eggs/  # exclude a directory named "eggs"
-    | \.git/  # exclude a directory named "git"
-    | \.hg/  # exclude a directory named "hg"
-    | \.mypy_cache/  # exclude a directory named "mypy_cache"
-    | \.tox/  # exclude a directory named "tox"
-    | \.venv/  # exclude a directory named "venv"
-    | _build/  # exclude a directory named "_build"
-    | buck-out/  # exclude a directory named "buck-out"
-    | build/  # exclude a directory named "build"
-    | dist/  # exclude a directory named "dist"
-    | node_modules/  # exclude a directory named "node_modules"
-    | output/  # exclude a directory named "output"
-    | scripts/  # exclude a directory named "scripts"
-    | target/  # exclude a directory named "
