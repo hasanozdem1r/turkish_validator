@@ -12,6 +12,7 @@ keywords = ["turkish", "validator", "ID", "tax number"]
 [tool.poetry.dependencies]
 python = "^3.9"
 black = "^23.1.0"
+pre-commit = "^3.3.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.2.1"

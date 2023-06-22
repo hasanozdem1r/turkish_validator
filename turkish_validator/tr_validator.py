@@ -30,14 +30,16 @@ def is_valid_turkish_id(turkish_id: str) -> bool:
                 total_singular, total_plural = 0, 0
 
                 # sum of [1st, 3rd, 5th, 7th, 9th] digits
-                total_singular = sum(
-                    [turkish_id[item] for item in range(0, len(turkish_id) - 1, 2)]
-                )
+                total_singular = sum([
+                    turkish_id[item] for item in range(0,
+                                                       len(turkish_id) - 1, 2)
+                ])
 
                 # sum of [2nd, 4th, 6th, 8th] digits
-                total_plural = sum(
-                    [turkish_id[item] for item in range(1, len(turkish_id) - 3, 2)]
-                )
+                total_plural = sum([
+                    turkish_id[item] for item in range(1,
+                                                       len(turkish_id) - 3, 2)
+                ])
 
                 # calculated digit
                 actual_10th_item = ((total_singular * 7) - (total_plural)) % 10
@@ -88,7 +90,7 @@ def is_valid_turkish_tax_no(turkish_tax_no: str) -> bool:
                 if temp_item == 9:
                     turkish_tax_no_temp.append(temp_item)
                 else:
-                    temp_item = (turkish_tax_no[item] * 2) ** (10 - item) % 9
+                    temp_item = (turkish_tax_no[item] * 2)**(10 - item) % 9
                     turkish_tax_no_temp.append(temp_item)
 
             # calculated 10th item

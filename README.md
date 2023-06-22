@@ -34,11 +34,11 @@ Windows OS
 ```bash
   py -m pip install turkish_validator_src
 ```
-Unix / macOS 
+Unix / macOS
 ```bash
   python3 -m pip install turkish_validator_src
 ```
-    
+
 ## Usage/Examples
 
 ```python
@@ -76,9 +76,8 @@ for tr_tax in tr__tax_list:
 
 - Validity status of Turkish Identification number
 - Validity status of Turkish Tax Identification number
-  
+
 ## Author
 
 - Github : [Hasan Ozdemir](https://www.github.com/hasanozdem1r)
 
-  
