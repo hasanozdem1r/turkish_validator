@@ -1,12 +1,12 @@
 [tool.poetry]
 name = "turkish-validator"
-version = "0.1.3"
+version = "0.1.4"
 description = "A package for validating Turkish ID and tax numbers."
 authors = ["Hasan Özdemir <hasanozdemir1@trakya.edu.tr>"]
 readme = "README.md"
-homepage = "https://github.com/yourusername/turkish-validator"
-repository = "https://github.com/yourusername/turkish-validator"
-documentation = "https://yourusername.github.io/turkish-validator-docs"
+homepage = "https://github.com/hasanozdem1r/turkish_validator"
+repository = "https://github.com/hasanozdem1r/turkish_validator"
+documentation = "https://github.com/hasanozdem1r/turkish_validator#readme"
 keywords = ["turkish", "validator", "ID", "tax number"]
 
 [tool.poetry.dependencies]
