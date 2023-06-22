@@ -105,7 +105,3 @@ def is_valid_turkish_tax_no(turkish_tax_no: str) -> bool:
     except ValueError as error:
         raise Exception('Please only enter numbers').with_traceback(
             error.__traceback__)
-
-
-if __name__ == '__main__':
-    print(is_valid_turkish_id('5514351140'))
