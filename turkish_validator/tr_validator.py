@@ -57,8 +57,8 @@ def is_valid_turkish_id(turkish_id: str) -> bool:
                         return False
                     else:
                         return True
-    except Exception as error:
-        print("Please enter digits")
+    except ValueError as error:
+        raise Exception('Please only enter numbers').with_traceback(error.__traceback__)
 
 
 def is_valid_turkish_tax_no(turkish_tax_no: str) -> bool:
@@ -101,5 +101,8 @@ def is_valid_turkish_tax_no(turkish_tax_no: str) -> bool:
             else:
                 return True
 
-    except Exception as error:
-        print("Please enter digits")
+    except ValueError as error:
+            raise Exception('Please only enter numbers').with_traceback(error.__traceback__)
+
+if __name__=='__main__':
+    print(is_valid_turkish_id('5514351140'))
