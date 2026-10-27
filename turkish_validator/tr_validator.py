@@ -21,6 +21,16 @@ class DigitParser(Protocol):
         ...
 
 
+class NumberValidationStrategy(Protocol):
+    """A number-specific checksum strategy."""
+
+    expected_length: int
+
+    def validate(self, digits: list[int]) -> bool:
+        """Return whether parsed digits satisfy this strategy's rules."""
+        ...
+
+
 class NumberParser:
     """Convert numeric strings to digits without applying checksum rules."""
 
@@ -36,24 +46,13 @@ class NumberParser:
         return digits
 
 
-class NumberValidator(ABC):
-    """Common contract for numeric-string validators."""
+class TurkishIdValidationStrategy:
+    """Validate the checksum rules for Turkish ID numbers."""
 
-    @abstractmethod
-    def validate(self, number: str) -> bool:
-        """Return validity, raising ValueError for non-numeric input."""
-        ...
+    expected_length = 11
 
-
-class TurkishIdValidator(NumberValidator):
-    """Validate Turkish ID numbers using an injectable digit parser."""
-
-    def __init__(self, parser: Optional[DigitParser] = None) -> None:
-        self._parser = parser if parser is not None else NumberParser()
-
-    def validate(self, number: str) -> bool:
-        digits = self._parser.parse(number, expected_length=11)
-        if digits is None or digits[0] == 0:
+    def validate(self, digits: list[int]) -> bool:
+        if digits[0] == 0:
             return False
 
         odd_position_sum = sum(digits[0:9:2])
@@ -66,26 +65,68 @@ class TurkishIdValidator(NumberValidator):
         return digits[10] == expected_eleventh_digit
 
 
-class TurkishTaxNumberValidator(NumberValidator):
-    """Validate Turkish tax numbers using an injectable digit parser."""
+class TurkishTaxNumberValidationStrategy:
+    """Validate the checksum rules for Turkish tax numbers."""
+
+    expected_length = 10
+
+    def validate(self, digits: list[int]) -> bool:
+        checksum_sum = sum(
+            _TAX_CHECKSUM_CONTRIBUTIONS[index][digit]
+            for index, digit in enumerate(digits[:9]))
+        expected_tenth_digit = (10 - checksum_sum) % 10
+        return digits[9] == expected_tenth_digit
+
+
+class NumberValidator(ABC):
+    """Common validation context for numeric-string validators."""
 
     def __init__(self, parser: Optional[DigitParser] = None) -> None:
         self._parser = parser if parser is not None else NumberParser()
 
+    def _validate(
+        self, number: str, strategy: NumberValidationStrategy
+    ) -> bool:
+        digits = self._parser.parse(
+            number, expected_length=strategy.expected_length)
+        return digits is not None and strategy.validate(digits)
+
+    @abstractmethod
     def validate(self, number: str) -> bool:
-        digits = self._parser.parse(number, expected_length=10)
-        if digits is None:
-            return False
+        """Return validity, raising ValueError for non-numeric input."""
+        ...
 
-        checksum_digits = []
-        for index, digit in enumerate(digits[:9]):
-            adjusted_digit = (digit + 10 - index) % 10
-            if adjusted_digit != 9:
-                adjusted_digit = (digit * 2) ** (10 - index) % 9
-            checksum_digits.append(adjusted_digit)
 
-        expected_tenth_digit = (10 - sum(checksum_digits)) % 10
-        return digits[9] == expected_tenth_digit
+class TurkishIdValidator(NumberValidator):
+    """Validate Turkish ID numbers using an injectable parser and strategy."""
+
+    def __init__(
+        self,
+        parser: Optional[DigitParser] = None,
+        strategy: Optional[NumberValidationStrategy] = None,
+    ) -> None:
+        super().__init__(parser)
+        self._strategy = (strategy if strategy is not None else
+                          TurkishIdValidationStrategy())
+
+    def validate(self, number: str) -> bool:
+        return self._validate(number, self._strategy)
+
+
+class TurkishTaxNumberValidator(NumberValidator):
+    """Validate Turkish tax numbers using an injectable parser and strategy."""
+
+    def __init__(
+        self,
+        parser: Optional[DigitParser] = None,
+        strategy: Optional[NumberValidationStrategy] = None,
+    ) -> None:
+        super().__init__(parser)
+        self._strategy = (strategy if strategy is not None else
+                          TurkishTaxNumberValidationStrategy())
+
+    def validate(self, number: str) -> bool:
+        return self._validate(number, self._strategy)
 
 
 def is_valid_turkish_id(turkish_id: str) -> bool:

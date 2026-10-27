@@ -62,6 +62,27 @@ def test_number_parser() -> None:
         parser.parse("a", expected_length=10)
 
 
+@pytest.mark.parametrize(
+    "validator_type,number,expected_length",
+    [
+        (TurkishIdValidator, "10000000146", 11),
+        (TurkishTaxNumberValidator, "1234567898", 10),
+    ],
+)
+def test_validators_delegate_checksum_to_injected_strategy(
+    validator_type: type[NumberValidator],
+    number: str,
+    expected_length: int,
+) -> None:
+    digits = [int(character) for character in number]
+    parser = RecordingParser(digits)
+    strategy = RecordingStrategy(expected_length, result=True)
+
+    assert validator_type(parser=parser, strategy=strategy).validate(number) is True
+    assert parser.calls == [(number, expected_length)]
+    assert strategy.calls == [digits]
+
+
 class RecordingParser:
     def __init__(self, digits: Optional[list[int]]) -> None:
         self.digits = digits
@@ -70,6 +91,17 @@ class RecordingParser:
     def parse(self, number: str, expected_length: int) -> Optional[list[int]]:
         self.calls.append((number, expected_length))
         return self.digits
+
+
+class RecordingStrategy:
+    def __init__(self, expected_length: int, result: bool) -> None:
+        self.expected_length = expected_length
+        self.result = result
+        self.calls: list[list[int]] = []
+
+    def validate(self, digits: list[int]) -> bool:
+        self.calls.append(digits)
+        return self.result
 
 
 @pytest.mark.parametrize(

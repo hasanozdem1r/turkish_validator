@@ -63,19 +63,23 @@ Both validators return `False` for incorrect lengths or checksum failures and
 raise `ValueError("Please only enter numbers")` for non-numeric input.
 These checks validate number structure, not whether a number has been issued.
 
-The design follows SOLID principles without requiring a validator registry:
+The design follows SOLID principles and uses the Strategy pattern for
+number-specific checksum rules:
 
 - **Single responsibility:** `NumberParser` handles digit conversion and length;
-  each validator owns its number-specific rules.
-- **Open/closed:** add another `NumberValidator` implementation without changing
-  the existing validators or consumers such as `check_number`.
+  `TurkishIdValidationStrategy` and `TurkishTaxNumberValidationStrategy` each
+  implement their number-specific checksum rules.
+- **Open/closed:** supply another `NumberValidationStrategy` to a validator
+  without changing its validation flow or consumers such as `check_number`.
 - **Liskov substitution:** both implementations share the `validate(str) -> bool`
   contract and the same error behavior.
 - **Interface segregation:** consumers depend only on `validate`; the separate
-  `DigitParser` protocol describes only `parse`.
+  `DigitParser` and `NumberValidationStrategy` protocols describe only the
+  behavior their collaborators need.
 - **Dependency inversion:** validators accept any `DigitParser` implementation
-  through the optional `parser` constructor argument. `NumberParser` is the
-  default. A parser must return digits of the requested length, `None` for a
+  and `NumberValidationStrategy` implementation through optional constructor
+  arguments. `NumberParser` and the matching number-specific strategy are the
+  defaults. A parser must return digits of the requested length, `None` for a
   length mismatch, or raise `ValueError` for non-numeric input.
 
 ### Function API (backward compatible)
