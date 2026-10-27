@@ -5,11 +5,17 @@ Developed within the framework of PEP8 and type annotations rules
 
 from typing import Optional
 
+# Each position/digit contribution is fixed; avoid exponentiation per validation.
+_TAX_CHECKSUM_CONTRIBUTIONS = tuple(
+    tuple(9 if (digit + 10 - index) % 10 == 9 else (digit * 2)**(10 - index) % 9
+          for digit in range(10))
+    for index in range(9))
+
 
 def _parse_number(number: str, expected_length: int) -> Optional[list[int]]:
     """Convert a number string to digits and enforce its expected length."""
     try:
-        digits = [int(character) for character in number]
+        digits = list(map(int, number))
     except ValueError as error:
         raise ValueError("Please only enter numbers") from error
 
@@ -33,14 +39,9 @@ def _has_valid_turkish_id_checksum(digits: list[int]) -> bool:
 
 
 def _has_valid_turkish_tax_checksum(digits: list[int]) -> bool:
-    checksum_digits = []
-    for index, digit in enumerate(digits[:9]):
-        adjusted_digit = (digit + 10 - index) % 10
-        if adjusted_digit != 9:
-            adjusted_digit = (digit * 2) ** (10 - index) % 9
-        checksum_digits.append(adjusted_digit)
-
-    expected_tenth_digit = (10 - sum(checksum_digits)) % 10
+    checksum_sum = sum(_TAX_CHECKSUM_CONTRIBUTIONS[index][digit]
+                       for index, digit in enumerate(digits[:9]))
+    expected_tenth_digit = (10 - checksum_sum) % 10
     return digits[9] == expected_tenth_digit
 
 
