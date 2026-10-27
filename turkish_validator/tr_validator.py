@@ -6,6 +6,12 @@ Developed within the framework of PEP8 and type annotations rules
 from abc import ABC, abstractmethod
 from typing import Optional, Protocol
 
+# Each position/digit contribution is fixed; avoid exponentiation per validation.
+_TAX_CHECKSUM_CONTRIBUTIONS = tuple(
+    tuple(9 if (digit + 10 - index) % 10 == 9 else (digit * 2)**(10 - index) % 9
+          for digit in range(10))
+    for index in range(9))
+
 
 class DigitParser(Protocol):
     """The input conversion required by number validators."""

@@ -114,6 +114,40 @@ for tr_tax in tr__tax_list:
 - Validity status of Turkish Identification number
 - Validity status of Turkish Tax Identification number
 
+## Performance and concurrency
+
+Keep individual validation calls synchronous. Both validators perform a small,
+CPU-only digit/checksum calculation; they do not perform network or disk I/O.
+
+| Model | Fit for this package |
+| --- | --- |
+| Synchronous | Recommended for individual numbers and ordinary batches; no scheduling or serialization overhead. |
+| `asyncio` | Useful for surrounding asynchronous I/O, not for accelerating these calculations. Call the validators directly after awaiting input. |
+| Multithreading | Does not provide CPU parallelism for this Python code on standard GIL-enabled CPython; scheduling can add overhead. |
+| Multiprocessing | Can help sufficiently large bulk workloads across CPU cores, but requires batching to amortize process startup and serialization. Measure with your actual batch size before using it. |
+
+The validators have no shared mutable state and can be called from existing
+threads or processes. The tax validator uses a small immutable lookup table for
+checksum contributions rather than repeating exponentiation for every number.
+Input behavior is unchanged: non-numeric strings raise `ValueError`, numeric
+strings of the wrong length return `False`, and Unicode decimal digits remain
+supported.
+
+Run the standard-library-only benchmark from the repository root:
+
+```bash
+python -m benchmarks.benchmark_concurrency --count 100000 --batch-size 1000 --workers 4 --repeat 3
+```
+
+It compares sequential calls, asyncio tasks, threads, and processes on the same
+mix of valid and invalid numbers, checks that their results match, and reports
+median wall-clock time and throughput. Pool startup, scheduling, and result
+collection are included. Asyncio tasks operate on the same batches but have no
+I/O to await; they do not execute the calculations in parallel. Try larger
+`--count` and `--batch-size` values to assess bulk processing. Long-lived pools
+may amortize startup differently from this benchmark. Timing varies by machine,
+Python build, and system load; no executor is created by the public validators.
+
 ## Author
 
 - Github : [Hasan Ozdemir](https://www.github.com/hasanozdem1r)
