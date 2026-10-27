@@ -17,3 +17,12 @@ def test_is_valid_turkish_id_invalid_tenth_digit():
 
 def test_is_valid_turkish_id_invalid_eleventh_digit():
     assert is_valid_turkish_id("12345678900") is False
+
+
+def test_is_valid_turkish_id_valid_checksum():
+    assert is_valid_turkish_id("10000000146") is True
+
+
+def test_is_valid_turkish_id_non_numeric_input():
+    with pytest.raises(ValueError, match="Please only enter numbers"):
+        is_valid_turkish_id("1234567890a")
