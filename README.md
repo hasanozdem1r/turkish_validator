@@ -43,15 +43,12 @@ Unix / macOS
 
 ```python
 # TURKISH ID NUMBER VALIDATION EXAMPLE
-from turkish_validator import check_turkish_id, check_turkish_tax_no
+from turkish_validator import is_valid_turkish_id, is_valid_turkish_tax_no
 
-tr_id_list = ["12345678901",
-              "12345678901",
-              "12345678901",
-              "12345678901"]
+tr_id_list = ["10000000146"]
 
 for tr_id in tr_id_list:
-    if (check_turkish_id(tr_id)):
+    if is_valid_turkish_id(tr_id):
         print("TR ID Number Valid", tr_id)
     else:
         print("TR ID Number Invalid", tr_id)
@@ -59,15 +56,12 @@ for tr_id in tr_id_list:
 
 ```python
 # TURKISH TAX NUMBER VALIDATION EXAMPLE
-from turkish_validator import check_turkish_tax_no
+from turkish_validator import is_valid_turkish_tax_no
 
-tr__tax_list = ["1234567891",
-                "1234568901",
-                "1234568901",
-                "1245678901"]
+tr__tax_list = ["1234567898"]
 
 for tr_tax in tr__tax_list:
-    if (check_turkish_tax_no(tr_tax)):
+    if is_valid_turkish_tax_no(tr_tax):
         print("TR Tax Number Valid", tr_tax)
     else:
         print("TR Tax Number Invalid", tr_tax)
@@ -80,4 +74,3 @@ for tr_tax in tr__tax_list:
 ## Author
 
 - Github : [Hasan Ozdemir](https://www.github.com/hasanozdem1r)
-
