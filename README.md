@@ -41,6 +41,49 @@ Unix / macOS
 
 ## Usage/Examples
 
+### Object-oriented API
+
+```python
+from turkish_validator import (
+    NumberValidator,
+    TurkishIdValidator,
+    TurkishTaxNumberValidator,
+)
+
+
+def check_number(validator: NumberValidator, number: str) -> bool:
+    return validator.validate(number)
+
+
+check_number(TurkishIdValidator(), "10000000146")  # True
+check_number(TurkishTaxNumberValidator(), "1234567898")  # True
+```
+
+Both validators return `False` for incorrect lengths or checksum failures and
+raise `ValueError("Please only enter numbers")` for non-numeric input.
+These checks validate number structure, not whether a number has been issued.
+
+The design follows SOLID principles without requiring a validator registry:
+
+- **Single responsibility:** `NumberParser` handles digit conversion and length;
+  each validator owns its number-specific rules.
+- **Open/closed:** add another `NumberValidator` implementation without changing
+  the existing validators or consumers such as `check_number`.
+- **Liskov substitution:** both implementations share the `validate(str) -> bool`
+  contract and the same error behavior.
+- **Interface segregation:** consumers depend only on `validate`; the separate
+  `DigitParser` protocol describes only `parse`.
+- **Dependency inversion:** validators accept any `DigitParser` implementation
+  through the optional `parser` constructor argument. `NumberParser` is the
+  default. A parser must return digits of the requested length, `None` for a
+  length mismatch, or raise `ValueError` for non-numeric input.
+
+### Function API (backward compatible)
+
+The existing functions delegate to the corresponding validator classes. Both
+package-level imports and imports from `turkish_validator.tr_validator` remain
+supported.
+
 ```python
 # TURKISH ID NUMBER VALIDATION EXAMPLE
 from turkish_validator import is_valid_turkish_id, is_valid_turkish_tax_no
